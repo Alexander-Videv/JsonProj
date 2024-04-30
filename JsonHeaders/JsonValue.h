@@ -14,5 +14,6 @@ protected:
     // private:
     JsonValue() = delete;
     JsonValue(TYPE type);
-    ~JsonValue() = default;
+    virtual ~JsonValue() = default;
+    virtual void print() = 0;
 };
