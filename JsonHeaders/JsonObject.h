@@ -10,6 +10,7 @@ private:
     private:
         std::string key;
         JsonValue *value;
+        void print(std::ostream &os);
     };
     JsonValue(TYPE::OBJECT);
     std::vector<KeyValuePair> value;
@@ -17,4 +18,5 @@ private:
 public:
     JsonObject();
     ~JsonObject();
+    void print(std::ostream &os);
 };

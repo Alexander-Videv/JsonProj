@@ -1,11 +1,14 @@
+#include <fstream>
 #include <iostream>
 
 class FileReader
 {
 private:
-    std::istream *input;
+    std::ifstream &input;
 
 public:
-    FileReader(std::istream &input) { this->input = &input; };
-    ~FileReader();
+    FileReader(std::ifstream &input);
+    ~FileReader() = default;
+
+    void print();
 };
