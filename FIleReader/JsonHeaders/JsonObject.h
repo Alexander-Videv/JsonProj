@@ -16,7 +16,7 @@ private:
     std::vector<KeyValuePair> value;
 
 public:
-    JsonObject();
+    JsonObject(std::string &str);
     ~JsonObject();
     void print(std::ostream &os);
 };

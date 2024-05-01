@@ -6,7 +6,9 @@ int main()
 {
 
     std::string input, output;
-    std::getline(std::cin, input);
+    // std::getline(std::cin, input);
+
+    input = "test.json";
 
     std::ifstream file(input);
 

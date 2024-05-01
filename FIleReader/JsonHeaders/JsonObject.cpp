@@ -15,6 +15,6 @@ JsonValue::JsonValue(TYPE type)
     this->type = type;
 }
 
-JsonObject::JsonObject()
+JsonObject::JsonObject(std::string &str)
 {
 }
