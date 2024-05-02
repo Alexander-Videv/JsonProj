@@ -1,6 +1,7 @@
 #include <fstream>
 #include <string>
 #include "FileReader/FileReader.cpp"
+#include "FileReader/JsonHeaders/JsonObject.cpp"
 
 int main()
 {
@@ -14,7 +15,7 @@ int main()
 
     FileReader read(file);
 
-    read.print();
+    read.read(std::cout);
 
     return 0;
 }

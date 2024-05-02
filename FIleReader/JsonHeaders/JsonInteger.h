@@ -1,5 +1,8 @@
 #include "JsonValue.h"
 
+#ifndef JSON_INTEGER_H
+#define JSON_INTEGER_H
+
 class JsonInteger : public JsonValue
 {
 private:
@@ -10,3 +13,5 @@ public:
     JsonInteger();
     ~JsonInteger();
 };
+
+#endif

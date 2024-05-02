@@ -1,3 +1,6 @@
+#ifndef JSON_VALUE_H
+#define JSON_VALUE_H
+
 class JsonValue
 {
 protected:
@@ -12,8 +15,10 @@ protected:
     TYPE type;
 
 public:
-    JsonValue() = delete;
-    JsonValue(TYPE type);
+    // JsonValue() = delete;
+    JsonValue(TYPE type) { this->type = type; };
     virtual ~JsonValue() = default;
-    // virtual void print() = 0;
+    virtual void print(std::ostream &os) = 0;
 };
+
+#endif

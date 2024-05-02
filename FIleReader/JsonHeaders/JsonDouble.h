@@ -1,5 +1,8 @@
 #include "JsonValue.h"
 
+#ifndef JSON_DOUBLE_H
+#define JSON_DOUBLE_H
+
 class JsonDouble : public JsonValue
 {
 private:
@@ -10,3 +13,5 @@ public:
     JsonDouble();
     ~JsonDouble();
 };
+
+#endif

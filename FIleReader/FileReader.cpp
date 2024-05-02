@@ -1,17 +1,23 @@
 #include "FileReader.h"
 #include <string>
 
-void FileReader::print()
+void FileReader::read(std::ostream &os)
 {
     char output;
-    std::string token;
+    std::string key, value;
 
     while (!input.eof())
     {
         input.ignore(100, '"');
-        std::getline(input, token, '{');
+        std::getline(input, key, '"');
 
-        JsonObject obj(token);
+        input.ignore(2);
+
+        // std::getline(input, value, ',');
+
+        JsonObject obj(key, value);
+        obj.print(os);
+        os << "  <- this is token" << "\n";
     }
 }
 
