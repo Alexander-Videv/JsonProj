@@ -7,12 +7,13 @@
 class JsonArray : public JsonValue
 {
 private:
-    JsonValue(TYPE::INTEGER);
     std::vector<JsonValue *> array;
 
 public:
     JsonArray();
     ~JsonArray();
+    void print(std::ostream &os) const override;
+    JsonValue *clone() const override;
 };
 
 #endif

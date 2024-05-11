@@ -1,4 +1,5 @@
 #include "JsonValue.h"
+#include "KeyValuePair.h"
 #include <string>
 #include <string.h>
 #include <vector>
@@ -9,24 +10,14 @@
 class JsonObject : public JsonValue
 {
 private:
-    struct KeyValuePair
-    {
-    public:
-        std::string key;
-        JsonValue *value;
-        void print(std::ostream &os)
-        {
-            os << key;
-            // value->print(os);
-        };
-    };
-    // JsonObject();
     std::vector<KeyValuePair> value;
 
 public:
     JsonObject(std::string &key, std::string &value);
     ~JsonObject() = default;
-    void print(std::ostream &os);
+    void print(std::ostream &os) const override;
+    JsonValue *clone() const override;
+    // JsonValue *JsonObject::JsonObjectFactory();
 };
 
 #endif

@@ -4,21 +4,10 @@
 class JsonValue
 {
 protected:
-    enum class TYPE
-    {
-        STRING,
-        INTEGER,
-        DATE,
-        ARRAY,
-        OBJECT
-    };
-    TYPE type;
-
 public:
-    // JsonValue() = delete;
-    JsonValue(TYPE type) { this->type = type; };
-    virtual ~JsonValue() = default;
-    virtual void print(std::ostream &os) = 0;
+    virtual ~JsonValue(){};
+    virtual void print(std::ostream &os) const = 0;
+    virtual JsonValue *clone() const = 0;
 };
 
 #endif

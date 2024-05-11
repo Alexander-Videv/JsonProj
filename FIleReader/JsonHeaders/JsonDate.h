@@ -7,12 +7,13 @@
 class JsonDate : public JsonValue
 {
 private:
-    JsonValue(TYPE::DATE);
     std::string value;
 
 public:
     JsonDate();
     ~JsonDate();
+    void print(std::ostream &os) const override;
+    JsonValue *clone() const override;
 };
 
 #endif

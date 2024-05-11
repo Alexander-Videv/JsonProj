@@ -6,12 +6,13 @@
 class JsonDouble : public JsonValue
 {
 private:
-    JsonValue(TYPE::INTEGER);
     double value;
 
 public:
     JsonDouble();
     ~JsonDouble();
+    void print(std::ostream &os) const override;
+    JsonValue *clone() const override;
 };
 
 #endif

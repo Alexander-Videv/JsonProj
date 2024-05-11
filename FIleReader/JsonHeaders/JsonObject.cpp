@@ -13,9 +13,9 @@ void JsonObject::print(std::ostream &os)
     }
 }
 
-JsonObject::JsonObject(std::string &key, std::string &value) : JsonValue(TYPE::OBJECT)
+JsonObject::JsonObject(std::string &key, std::string &value) : JsonValue()
 {
-    this->type = TYPE::OBJECT;
+    // this->type = TYPE::OBJECT;
     KeyValuePair object;
     this->value.push_back(object);
     this->value[0].key = key;
