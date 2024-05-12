@@ -10,6 +10,7 @@
 class JsonObject : public JsonValue
 {
 private:
+    std::string key;
     std::vector<KeyValuePair> value;
 
 public:
@@ -17,7 +18,9 @@ public:
     ~JsonObject() = default;
     void print(std::ostream &os) const override;
     JsonValue *clone() const override;
-    // JsonValue *JsonObject::JsonObjectFactory();
+    JsonValue *JsonObject::JsonObjectFactory();
+
+    void add();
 };
 
 #endif

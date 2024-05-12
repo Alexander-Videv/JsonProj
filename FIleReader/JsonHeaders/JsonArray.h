@@ -10,7 +10,7 @@ private:
     std::vector<JsonValue *> array;
 
 public:
-    JsonArray();
+    JsonArray(std::string &key, std::string &value);
     ~JsonArray();
     void print(std::ostream &os) const override;
     JsonValue *clone() const override;

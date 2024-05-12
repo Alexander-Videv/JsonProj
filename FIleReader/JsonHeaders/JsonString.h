@@ -10,8 +10,8 @@ private:
     std::string value;
 
 public:
-    JsonString();  // all of the constructors of these child classes should call the parametricized constructor
-    ~JsonString(); // of the JsonValue class using the right type
+    JsonString(std::string &key, std::string &value); // all of the constructors of these child classes should call the parametricized constructor
+    ~JsonString();                                    // of the JsonValue class using the right type
     JsonValue *clone() const override;
     void print(std::ostream &os) const override;
 };

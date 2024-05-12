@@ -15,27 +15,32 @@ enum class TYPE
     OBJECT
 };
 
-JsonValue *JsonObjectFactory(TYPE type)
+JsonValue *JsonObjectFactory(TYPE type, std::string &key, std::string &value)
 {
     switch (type)
     {
     case TYPE::STRING:
-        return new JsonString();
+        return new JsonString(key, value);
         break;
     case TYPE::INTEGER:
-        return new JsonInteger();
+        return new JsonInteger(key, value);
         break;
     case TYPE::DATE:
-        return new JsonDate();
+        return new JsonDate(key, value);
         break;
     case TYPE::ARRAY:
-        return new JsonArray();
+        return new JsonArray(key, value);
         break;
     case TYPE::OBJECT:
-        return new JsonObject();
+        return new JsonObject(key, value);
         break;
     default:
         return nullptr;
         break;
     }
+}
+
+TYPE parse(std::string &value)
+{
+    return TYPE::STRING;
 }

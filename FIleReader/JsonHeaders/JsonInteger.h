@@ -9,7 +9,7 @@ private:
     int value;
 
 public:
-    JsonInteger();
+    JsonInteger(std::string &key, std::string &value);
     ~JsonInteger();
     void print(std::ostream &os) const override;
     JsonValue *clone() const override;

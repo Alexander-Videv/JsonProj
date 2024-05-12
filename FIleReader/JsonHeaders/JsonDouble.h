@@ -9,7 +9,7 @@ private:
     double value;
 
 public:
-    JsonDouble();
+    JsonDouble(std::string &key, std::string &value);
     ~JsonDouble();
     void print(std::ostream &os) const override;
     JsonValue *clone() const override;
