@@ -1,4 +1,5 @@
 #include "JsonObject.h"
+#include "FIleReader/JsonHeaders/JsonObjectFunction.cpp"
 
 void JsonObject::print(std::ostream &os) const
 {
@@ -20,13 +21,13 @@ JsonObject::JsonObject(std::string &key, std::string &value) : JsonValue()
         this->key = key;
     }
 
-    this->value.push_back(JsonObjectFactory(parse(value), key, value));
+    this->value.push_back(KeyValuePair(key, JsonObjectFactory(parse(value), key, value)));
 }
 
 void JsonObject::add()
 {
-    if (this->value)
-    {
-        /* code */
-    }
+    // if (this->value)
+    // {
+    //     /* code */
+    // }
 }

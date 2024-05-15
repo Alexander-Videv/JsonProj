@@ -18,7 +18,8 @@ public:
     ~JsonObject() = default;
     void print(std::ostream &os) const override;
     JsonValue *clone() const override;
-    JsonValue *JsonObject::JsonObjectFactory();
+    // JsonValue *JsonObjectFactory(TYPE type, std::string &key, std::string &value);
+    // TYPE parse(std::string &value);
 
     void add();
 };

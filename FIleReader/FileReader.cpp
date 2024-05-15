@@ -1,7 +1,7 @@
 #include "FileReader.h"
 #include <string>
 
-void FileReader::read(std::ostream &os)
+void FileReader::write(std::ostream &os)
 {
     char output;
     std::string key, value;

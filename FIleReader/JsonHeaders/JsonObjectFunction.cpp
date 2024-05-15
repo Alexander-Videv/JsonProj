@@ -39,7 +39,6 @@ JsonValue *JsonObjectFactory(TYPE type, std::string &key, std::string &value)
         break;
     }
 }
-
 TYPE parse(std::string &value)
 {
     return TYPE::STRING;
