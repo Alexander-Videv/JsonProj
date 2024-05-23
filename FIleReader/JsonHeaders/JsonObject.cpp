@@ -1,9 +1,9 @@
+// #include "JsonObject.h"
+#include "JsonObjectFunction.hpp"
 #include "JsonObject.h"
-#include "FIleReader/JsonHeaders/JsonObjectFunction.cpp"
 
 void JsonObject::print(std::ostream &os) const
 {
-
     for (size_t i = 0; i < value.size(); i++)
     {
         value[i].print(os);
@@ -24,10 +24,20 @@ JsonObject::JsonObject(std::string &key, std::string &value) : JsonValue()
     this->value.push_back(KeyValuePair(key, JsonObjectFactory(parse(value), key, value)));
 }
 
-void JsonObject::add()
+JsonObject::JsonObject(std::istream &input)
 {
-    // if (this->value)
-    // {
-    //     /* code */
-    // }
+    std::string newLine;
+
+    while (newLine != '}')
+    {
+        std::getline(input, newLine);
+        std::cout << newLine;
+    }
 }
+// void JsonObject::add()
+// {
+//     // if (this->value)
+//     // {
+//     //     /* code */
+//     // }
+// }

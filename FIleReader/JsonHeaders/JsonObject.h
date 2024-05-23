@@ -15,13 +15,9 @@ private:
 
 public:
     JsonObject(std::string &key, std::string &value);
+    JsonObject(std::istream &input);
     ~JsonObject() = default;
     void print(std::ostream &os) const override;
-    JsonValue *clone() const override;
-    // JsonValue *JsonObjectFactory(TYPE type, std::string &key, std::string &value);
-    // TYPE parse(std::string &value);
-
-    void add();
 };
 
 #endif

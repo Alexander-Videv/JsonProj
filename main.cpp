@@ -1,24 +1,17 @@
 #include <fstream>
 #include <string>
-#include "FIleReader/FileReader.h"
-#include "FIleReader/JsonHeaders/JsonObject.h"
-#include "FileReader/FileReader.cpp"
-// #include "FileReader/JsonHeaders/JsonObject.cpp"
-#include "FIleReader/JsonHeaders/JsonObjectFunction.cpp"
+#include <sstream>
+#include "FIleReader/FileReader.hpp"
 
 int main()
 {
 
-    std::string input, output;
-    // std::getline(std::cin, input);
+    FileReader console;
 
-    input = "test.json";
+    std::istringstream input("open test.json\nwrite exit ");
 
-    std::ifstream file(input);
-
-    FileReader read(file);
-
-    read.write(std::cout);
+    console.getCommand(input);
+    // console.write(std::cout);
 
     return 0;
 }

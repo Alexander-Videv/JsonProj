@@ -1,3 +1,5 @@
+#include "JsonValue.h"
+#include <string>
 
 #ifndef KEY_VALUE_PAIR_H
 #define KEY_VALUE_PAR_H
