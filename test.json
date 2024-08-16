@@ -1,6 +1,12 @@
 {
-    "management": {
-        "directorId": 0,
-        "presidentId": 1
-    }
+    "offices": [
+        {
+            "name": "Headquarters",
+            "address": "Sofia"
+        },
+        {
+            "name": "Front Office",
+            "address": "New York City"
+        }
+    ]
 }
