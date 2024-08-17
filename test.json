@@ -1,12 +1,33 @@
 {
+    "members": [
+        {
+            "id": "12",
+            "name": "Sasho",
+            "position": "OOP"
+        },
+        {
+            "material": "roll"
+        },
+        {
+            "object": {
+                "value": "123",
+                "name": "test"
+            }
+        }
+    ],
+    "name": "Sasho",
     "offices": [
         {
             "name": "Headquarters",
             "address": "Sofia"
         },
         {
-            "name": "Front Office",
-            "address": "New York City"
+            "name": "FrontOffice",
+            "address": "NewYorkCity"
+        },
+        {
+            "location": "India",
+            "money": "infinite"
         }
     ]
 }

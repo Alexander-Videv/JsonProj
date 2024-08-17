@@ -11,6 +11,8 @@ private:
 
 public:
     void print(std::ostream &output) const override;
+    void saveprint(std::ostream &output) const override { print(output); };
+
     bool contains(std::string &value) const override;
     std::vector<Value *> search(std::string &sKey) const override
     {

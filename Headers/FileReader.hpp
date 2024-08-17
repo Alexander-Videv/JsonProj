@@ -43,7 +43,7 @@ private:
     };
 
     void search(std::string &sKey) const;
-    bool contains(std::string &value) const;
+    void contains(std::string &value) const;
     void set(std::string &path, std::string &value);
     void create(std::string &path, std::string &value);
     void pathDelete(std::string &path);
@@ -55,6 +55,7 @@ private:
 
     std::fstream file;
     Object Json;
+    std::string filename;
 
     mutable bool saveFlag = true;
     bool validFlag = false;

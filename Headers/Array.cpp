@@ -1,5 +1,28 @@
 #include "Array.hpp"
 
+void Array::print(std::ostream &output) const
+{
+    output << "\n";
+    for (size_t i = 0; i < objArray.size(); i++)
+    {
+        objArray[i].print(output);
+        output << "\n";
+        // output << i;
+    }
+}
+
+void Array::saveprint(std::ostream &output) const
+{
+    output << "[\n";
+    for (size_t i = 0; i < objArray.size(); i++)
+    {
+        objArray[i].saveprint(output);
+        if (i < objArray.size() - 1)
+            output << ",\n";
+    }
+    output << "\n]";
+}
+
 bool Array::contains(std::string &value) const
 {
     bool contains = false;
@@ -33,6 +56,41 @@ void Array::set(std::string &path, std::string &value)
         valueCopy = value;
         objArray[i].set(path, valueCopy);
     }
+}
+
+void Array::create(std::string &path, std::string &value)
+{
+    if (path.empty())
+    {
+        Object obj(value);
+        objArray.push_back(obj);
+        return;
+    }
+    else
+    {
+        for (size_t i = 0; i < objArray.size(); i++)
+        {
+            if (objArray[i].hasKey(path))
+            {
+                objArray[i].create(path, value);
+                return;
+            }
+        }
+    }
+    for (size_t i = 0; i < objArray.size(); i++)
+    {
+        try
+        {
+            objArray[i].create(path, value);
+            path.clear();
+            return;
+        }
+        catch (const std::exception &e)
+        {
+            continue;
+        }
+    }
+    Value::create(path, value);
 }
 
 Array::Array(std::string &text)

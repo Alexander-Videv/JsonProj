@@ -10,6 +10,8 @@ private:
 
 public:
     void print(std::ostream &output) const override;
+    void saveprint(std::ostream &output) const override { print(output); };
+
     std::vector<Value *> search(std::string &sKey) const override
     {
         std::vector<Value *> null;

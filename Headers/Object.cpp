@@ -40,13 +40,24 @@ KeyValuePair Object::parse(std::string &text)
     return pair;
 }
 
+void Object::saveprint(std::ostream &output) const
+{
+    output << "{\n";
+    for (int i = jsonArray.size() - 1; i >= 0; i--)
+    {
+        jsonArray[i].saveprint(output);
+        if (i != 0)
+            output << ",\n";
+    }
+    output << "\n}";
+}
 void Object::print(std::ostream &output) const
 {
-
     for (int i = jsonArray.size() - 1; i >= 0; i--)
     {
         jsonArray[i].print(output);
-        output << ' ';
+        if (i != 0)
+            output << " ";
     }
 }
 
@@ -90,8 +101,19 @@ Value *Object::readValue(std::string &text)
     }
 
     buffer = text;
-    text.erase(0, text.length());
+    text.clear();
     return new String(buffer);
+}
+
+bool Object::hasKey(std::string &key)
+{
+    for (size_t i = 0; i < jsonArray.size(); i++)
+    {
+        if (key == jsonArray[i].getKey())
+            return true;
+    }
+
+    return false;
 }
 
 std::vector<Value *> Object::search(std::string &sKey) const
@@ -111,6 +133,53 @@ std::vector<Value *> Object::search(std::string &sKey) const
         }
     }
     return values;
+}
+
+void Object::create(std::string &path, std::string &value)
+{
+    std::string buffer;
+    if (path.find("/") < path.npos)
+        buffer = path.substr(0, path.find("/"));
+
+    for (size_t i = 0; i < jsonArray.size(); i++)
+    {
+        if (path.empty())
+            break;
+        if (jsonArray[i].getKey() == buffer || jsonArray[i].getKey() == path)
+        {
+            if (!buffer.empty())
+            {
+                path.erase(0, buffer.size() + 1);
+                buffer.clear();
+                jsonArray[i].value->create(path, value);
+                return;
+            }
+            else
+            {
+                path.clear();
+                jsonArray[i].value->create(path, value);
+                return;
+            }
+        }
+    }
+    std::string key;
+    if (value.find(":"))
+    {
+        key = value.substr(0, value.find(":"));
+        value.erase(0, value.find(":") + 1);
+    }
+
+    KeyValuePair pair;
+    if (key.empty())
+    {
+        pair.setKey(path);
+    }
+    else
+    {
+        pair.setKey(key);
+    }
+    pair.setValue(*readValue(value));
+    jsonArray.push_back(pair);
 }
 
 void Object::set(std::string &path, std::string &value)
@@ -150,7 +219,6 @@ bool Object::contains(std::string &value) const
 
 Object::Object(std::string &text)
 {
-    // while (!text.empty())
     jsonArray.push_back(parse(text));
     setType(JsonType::Object);
 }

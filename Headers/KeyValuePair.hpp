@@ -7,6 +7,7 @@
 struct KeyValuePair
 {
     void print(std::ostream &output) const;
+    void saveprint(std::ostream &output) const;
 
     void setKey(std::string &key);
     void setValue(Value &json);

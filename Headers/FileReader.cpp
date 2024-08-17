@@ -26,7 +26,7 @@ void FileReader::askToSave()
         << "Y/N" << '\n';
     char input;
     std::cin >> input;
-    while (input != 'Y' || input != 'N' || input != 'y' || input != 'n')
+    while (input != 'Y' && input != 'N' && input != 'y' && input != 'n')
     {
         std::cout << "Invalid character." << '\n';
         std::cin >> input;
@@ -56,9 +56,9 @@ void FileReader::search(std::string &sKey) const
         std::cout << "No objects match given key!" << '\n';
 }
 
-bool FileReader::contains(std::string &value) const
+void FileReader::contains(std::string &value) const
 {
-    return Json.contains(value);
+    std::cout << std::boolalpha << Json.contains(value) << '\n';
 }
 
 void FileReader::set(std::string &path, std::string &value)
@@ -66,6 +66,19 @@ void FileReader::set(std::string &path, std::string &value)
     try
     {
         Json.set(path, value);
+        saveFlag = false;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void FileReader::create(std::string &path, std::string &value)
+{
+    try
+    {
+        Json.create(path, value);
     }
     catch (const std::exception &e)
     {
@@ -170,6 +183,16 @@ void FileReader::readCommand()
             removeSpaces(input);
             set(path, input);
         }
+        if (buffer == "create")
+        {
+            std::string path = input.substr(0, input.find(' '));
+            input.erase(0, input.find(' ') + 1);
+            removeQuotes(path);
+            removeQuotes(input);
+            removeSpaces(path);
+            removeSpaces(input);
+            create(path, input);
+        }
         if (buffer == "search")
         {
             if (input[0] == '\"' && input[input.length() - 1] == '\"')
@@ -194,9 +217,10 @@ void FileReader::readCommand()
 void FileReader::open(std::string &filename)
 {
     this->file.open(filename);
-
     if (!file.good())
         throw std::invalid_argument("Json file can't be opened");
+
+    this->filename = filename;
 
     validFlag = true;
 
@@ -205,11 +229,13 @@ void FileReader::open(std::string &filename)
 
 void FileReader::save(std::string &path)
 {
+    this->file.close();
+    this->file.open(filename, std::ios::in | std::ios::out | std::ios::trunc);
     if (path.empty())
     {
         try
         {
-            Json.print(file);
+            Json.saveprint(this->file);
         }
         catch (const std::exception &e)
         {
@@ -222,18 +248,20 @@ void FileReader::save(std::string &path)
 
 void FileReader::saveAs(std::string &path, std::string &filename) const
 {
-    std::fstream newFile("jsonTest.txt");
+    std::fstream newFile(filename, std::ios::out);
     if (!newFile.good())
         throw std::logic_error("The file you want to save in can't be opened");
     if (path.empty())
     {
         try
         {
-            Json.print(newFile);
+            Json.saveprint(newFile);
         }
         catch (const std::exception &e)
         {
             std::cerr << e.what() << '\n';
+            newFile.close();
+            return;
         }
     }
 

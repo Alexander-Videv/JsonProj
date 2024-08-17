@@ -1,0 +1,35 @@
+{
+    "name": "ACMESoftwareCo.",
+    "type": "SoftwareDevelopmentCompany",
+    "offices": [
+        {
+            "name": "Headquarters",
+            "address": "Sofia"
+        },
+        {
+            "name": "FrontOffice",
+            "address": "NewYorkCity"
+        }
+    ],
+    "members": [
+        {
+            "id": "0",
+            "name": "JohnSmith",
+            "birthdate": "19800101"
+        },
+        {
+            "id": "1",
+            "name": "JaneSmith",
+            "birthdate": "19810202"
+        },
+        {
+            "id": "2",
+            "name": "JohnDoe",
+            "birthdate": "19820303"
+        }
+    ],
+    "management": {
+        "directorId": "0",
+        "presidentId": "1"
+    }
+}
