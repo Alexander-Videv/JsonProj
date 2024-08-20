@@ -13,5 +13,11 @@ void String::print(std::ostream &output) const
 
 bool String::contains(std::string &value) const
 {
-    return str.find(value) >= 0;
+    return str.find(value) < str.npos;
+}
+
+Value *String::createCopy()
+{
+    // String str(*this);
+    return new String(*this);
 }

@@ -93,6 +93,109 @@ void Array::create(std::string &path, std::string &value)
     Value::create(path, value);
 }
 
+void Array::deleteJ(std::string &path)
+{
+    if (path.empty())
+        Value::deleteJ(path);
+
+    if (path.find("/") < path.npos)
+    {
+        std::string buffer = path.substr(0, path.find("/"));
+        for (size_t i = 0; i < objArray.size(); i++)
+        {
+            if (objArray[i].hasKey(buffer))
+            {
+                objArray[i].deleteJ(path);
+                objArray[i].clearEmpty();
+                if (objArray[i].isEmpty())
+                    objArray.erase(objArray.begin() + i);
+
+                return;
+            }
+        }
+    }
+
+    std::string strCopy;
+    for (size_t i = 0; i < objArray.size(); i++)
+    {
+        strCopy = path;
+        if (objArray[i].hasKey(strCopy))
+        {
+            objArray[i].deleteJ(strCopy);
+            if (objArray[i].isEmpty())
+            {
+                objArray.erase(objArray.begin() + i);
+            }
+        }
+    }
+}
+
+Value *Array::getValue(std::string &path)
+{
+    if (path.empty())
+        return this;
+
+    std::string buffer;
+    if (path.find("/") < path.npos)
+    {
+        buffer = path.substr(0, path.find("/"));
+        path.erase(0, path.find("/") + 1);
+    }
+    else
+    {
+        buffer = path;
+        path.clear();
+    }
+
+    for (size_t i = 0; i < objArray.size(); i++)
+    {
+        if (objArray[i].hasKey(buffer) && path.empty())
+        {
+            return objArray[i].getValue(buffer);
+        }
+        else if (objArray[i].hasKey(buffer))
+            return objArray[i].getValue(path);
+    }
+
+    return nullptr;
+}
+
+void Array::setValue(std::string &path, Value *ptr, std::string &key)
+{
+    if (path.empty())
+    {
+        KeyValuePair pair(ptr, key);
+        Object obj;
+        obj.push(&pair);
+        objArray.push_back(obj);
+        return;
+    }
+
+    std::string buffer;
+    if (path.find("/"))
+    {
+        buffer = path.substr(0, path.find("/"));
+        path.erase(0, path.find("/") + 1);
+    }
+    else
+    {
+        buffer = path;
+        path.clear();
+    }
+
+    for (size_t i = 0; i < objArray.size(); i++)
+    {
+        if (objArray[i].hasKey(buffer))
+            objArray[i].setValue(path, ptr, key);
+    }
+}
+
+Value *Array::createCopy()
+{
+    // Array arr(*this);
+    return new Array(*this);
+}
+
 Array::Array(std::string &text)
 {
     this->objArray.clear();

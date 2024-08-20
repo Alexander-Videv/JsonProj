@@ -17,6 +17,11 @@ public:
     std::vector<Value *> search(std::string &sKey) const override;
     void set(std::string &path, std::string &value) override;
     void create(std::string &path, std::string &value) override;
+    void deleteJ(std::string &path) override;
+    bool isEmpty() const override { return objArray.size(); }
+    Value *getValue(std::string &path) override;
+    void setValue(std::string &path, Value *ptr, std::string &key) override;
+    Value *createCopy() override;
 
     Array(std::string &text);
     ~Array() = default;

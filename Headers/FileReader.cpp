@@ -38,6 +38,11 @@ void FileReader::askToSave()
     exit();
 }
 
+Value *FileReader::getValue(std::string &path)
+{
+    return Json.getValue(path);
+}
+
 void FileReader::search(std::string &sKey) const
 {
     std::vector<Value *> values;
@@ -84,6 +89,42 @@ void FileReader::create(std::string &path, std::string &value)
     {
         std::cerr << e.what() << '\n';
     }
+}
+
+void FileReader::pathDelete(std::string &path)
+{
+    try
+    {
+        Json.deleteJ(path);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void FileReader::move(std::string &from, std::string &to)
+{
+    std::string fromCopy = from;
+    Value *ptr = getValue(from);
+    if (ptr == nullptr)
+    {
+        std::cout << "ERROR";
+        return;
+    }
+    std::string empty;
+
+    // create(to, empty);
+    std::string key;
+    if (fromCopy.find_last_of("/") < fromCopy.npos)
+        key = fromCopy.substr(fromCopy.find_last_of("/") + 1);
+    else
+        key = fromCopy;
+
+    setValue(to, ptr, key);
+    pathDelete(fromCopy);
+
+    return;
 }
 
 void FileReader::parse()
@@ -137,6 +178,20 @@ void FileReader::removeSpaces(std::string &text) const
             text.erase(i, 1);
             i--;
         }
+    }
+}
+
+void FileReader::setValue(std::string &path, Value *ptr, std::string &key)
+{
+    try
+    {
+        Value *ptrCopy = ptr->createCopy();
+        Json.setValue(path, ptrCopy, key);
+        saveFlag = false;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
     }
 }
 
@@ -205,6 +260,19 @@ void FileReader::readCommand()
         }
         if (buffer == "saveas")
             saveAs(input);
+        if (buffer == "contains")
+            contains(input);
+        if (buffer == "delete")
+            pathDelete(input);
+        if (buffer == "move")
+        {
+            std::string from;
+            std::string to;
+            from = input.substr(0, input.find(" "));
+            to = input.substr(input.find(" ") + 1);
+            move(from, to);
+        }
+
         if (input == "save")
             save();
         if (input == "print")

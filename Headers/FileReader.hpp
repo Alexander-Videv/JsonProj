@@ -15,6 +15,8 @@ private:
     void validate();
 
     void askToSave();
+    Value *getValue(std::string &path);
+    Value *getType(Value *ptr);
 
     void open(std::string &filename);
     void exit();
@@ -52,6 +54,7 @@ private:
     void removeNewLines(std::string &text) const;
     void removeQuotes(std::string &text) const;
     void removeSpaces(std::string &text) const;
+    void setValue(std::string &path, Value *ptr, std::string &key);
 
     std::fstream file;
     Object Json;

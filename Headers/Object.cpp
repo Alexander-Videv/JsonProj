@@ -61,6 +61,17 @@ void Object::print(std::ostream &output) const
     }
 }
 
+void Object::clearEmpty()
+{
+    for (size_t i = 0; i < jsonArray.size(); i++)
+    {
+        if (jsonArray[i].isEmpty())
+        {
+            jsonArray.erase(jsonArray.begin() + i);
+        }
+    }
+}
+
 Value *Object::readValue(std::string &text)
 {
     std::string buffer;
@@ -116,6 +127,12 @@ bool Object::hasKey(std::string &key)
     return false;
 }
 
+Value *Object::createCopy()
+{
+    // Object obj(*this);
+    return new Object(*this);
+}
+
 std::vector<Value *> Object::search(std::string &sKey) const
 {
     std::vector<Value *> values;
@@ -163,7 +180,7 @@ void Object::create(std::string &path, std::string &value)
         }
     }
     std::string key;
-    if (value.find(":"))
+    if (value.find(":") < value.npos)
     {
         key = value.substr(0, value.find(":"));
         value.erase(0, value.find(":") + 1);
@@ -180,6 +197,86 @@ void Object::create(std::string &path, std::string &value)
     }
     pair.setValue(*readValue(value));
     jsonArray.push_back(pair);
+}
+
+void Object::deleteJ(std::string &path)
+{
+    std::string buffer;
+    if (path.find("/") < path.npos)
+        buffer = path.substr(0, path.find("/"));
+
+    for (size_t i = 0; i < jsonArray.size(); i++)
+    {
+        if (jsonArray[i].getKey() == path)
+        {
+            jsonArray.erase(jsonArray.begin() + i);
+            path.clear();
+
+            break;
+        }
+
+        if (jsonArray[i].getKey() == buffer)
+        {
+            path.erase(0, buffer.size() + 1);
+            buffer.clear();
+            jsonArray[i].value->deleteJ(path);
+            break;
+        }
+    }
+}
+
+Value *Object::getValue(std::string &path)
+{
+    if (path.empty())
+        return this;
+
+    std::string buffer;
+    if (path.find("/") < path.npos)
+    {
+        buffer = path.substr(0, path.find("/"));
+        path.erase(0, path.find("/") + 1);
+    }
+    else
+    {
+        buffer = path;
+        path.clear();
+    }
+
+    for (size_t i = 0; i < jsonArray.size(); i++)
+    {
+        if (jsonArray[i].getKey() == buffer)
+            return jsonArray[i].value->getValue(path);
+    }
+
+    return nullptr;
+}
+
+void Object::setValue(std::string &path, Value *ptr, std::string &key)
+{
+    if (path.empty() || path == " ")
+    {
+        KeyValuePair pair(ptr, key);
+        jsonArray.push_back(pair);
+        return;
+    }
+
+    std::string buffer;
+    if (path.find("/") < path.npos)
+    {
+        buffer = path.substr(0, path.find("/"));
+        path.erase(0, path.find("/") + 1);
+    }
+    else
+    {
+        buffer = path;
+        path.clear();
+    }
+
+    for (size_t i = 0; i < jsonArray.size(); i++)
+    {
+        if (jsonArray[i].getKey() == buffer)
+            jsonArray[i].value->setValue(path, ptr, key);
+    }
 }
 
 void Object::set(std::string &path, std::string &value)

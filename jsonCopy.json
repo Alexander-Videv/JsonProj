@@ -1,13 +1,35 @@
 {
-"Sasho":"Sasho",
-"offices":[
-{
-"name":"Headquarters",
-"address":"Sofia"
-},
-{
-"name":"FrontOffice",
-"address":"NewYorkCity"
-}
-]
+    "name": "ACME Software Co.",
+    "type": "Software Development Company",
+    "offices": [
+        {
+            "name": "Headquarters",
+            "address": "Sofia"
+        },
+        {
+            "name": "Front Office",
+            "address": "New York City"
+        }
+    ],
+    "members": [
+        {
+            "id": 0,
+            "name": "John Smith",
+            "birthdate": "19800101"
+        },
+        {
+            "id": 1,
+            "name": "Jane Smith",
+            "birthdate": "19810202"
+        },
+        {
+            "id": 2,
+            "name": "John Doe",
+            "birthdate": "19820303"
+        }
+    ],
+    "management": {
+        "directorId": 0,
+        "presidentId": 1
+    }
 }

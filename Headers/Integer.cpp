@@ -12,6 +12,12 @@ bool Integer::contains(std::string &val) const
     return value == num;
 }
 
+Value *Integer::createCopy()
+{
+    // Integer m_int(*this);
+    return new Integer(*this);
+}
+
 Integer::Integer(int value)
 {
     this->value = value;

@@ -1,5 +1,11 @@
 #include "KeyValuePair.hpp"
 
+KeyValuePair::KeyValuePair(Value *ptr, std::string &key)
+{
+    setKey(key);
+    setValue(ptr);
+}
+
 void KeyValuePair::print(std::ostream &output) const
 {
     output << key << ":";
@@ -27,6 +33,11 @@ void KeyValuePair::setKey(std::string &key)
 void KeyValuePair::setValue(Value &json)
 {
     this->value = &json;
+}
+
+void KeyValuePair::setValue(Value *json)
+{
+    value = json;
 }
 
 std::string &KeyValuePair::getKey()

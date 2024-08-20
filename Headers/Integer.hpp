@@ -18,6 +18,7 @@ public:
         return null;
     };
     bool contains(std::string &val) const override;
+    Value *createCopy() override;
 
     Integer(int value);
     ~Integer() = default;

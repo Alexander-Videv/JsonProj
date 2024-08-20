@@ -1,21 +1,16 @@
 {
+    "object": {
+        "value": "123",
+        "name": "test"
+    },
+    "material": "roll",
     "members": [
         {
             "id": "12",
             "name": "Sasho",
             "position": "OOP"
-        },
-        {
-            "material": "roll"
-        },
-        {
-            "object": {
-                "value": "123",
-                "name": "test"
-            }
         }
     ],
-    "name": "Sasho",
     "offices": [
         {
             "name": "Headquarters",
@@ -28,6 +23,12 @@
         {
             "location": "India",
             "money": "infinite"
+        },
+        {
+            "name": "sasho"
+        },
+        {
+            "fuck": "you"
         }
     ]
 }
