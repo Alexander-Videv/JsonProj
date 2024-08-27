@@ -5,9 +5,8 @@ void Array::print(std::ostream &output) const
     output << "\n";
     for (size_t i = 0; i < objArray.size(); i++)
     {
-        objArray[i].print(output);
+        objArray[i]->print(output);
         output << "\n";
-        // output << i;
     }
 }
 
@@ -16,7 +15,7 @@ void Array::saveprint(std::ostream &output) const
     output << "[\n";
     for (size_t i = 0; i < objArray.size(); i++)
     {
-        objArray[i].saveprint(output);
+        objArray[i]->saveprint(output);
         if (i < objArray.size() - 1)
             output << ",\n";
     }
@@ -28,7 +27,7 @@ bool Array::contains(std::string &value) const
     bool contains = false;
     for (size_t i = 0; i < objArray.size(); i++)
     {
-        if (objArray[i].contains(value))
+        if (objArray[i]->contains(value))
             contains = true;
     }
     return contains;
@@ -39,7 +38,7 @@ std::vector<Value *> Array::search(std::string &sKey) const
     std::vector<Value *> values;
     for (size_t i = 0; i < objArray.size(); i++)
     {
-        std::vector<Value *> toBeAdded = objArray[i].search(sKey);
+        std::vector<Value *> toBeAdded = objArray[i]->search(sKey);
         for (size_t j = 0; j < toBeAdded.size(); j++)
         {
             values.push_back(toBeAdded.at(j));
@@ -54,7 +53,7 @@ void Array::set(std::string &path, std::string &value)
     for (size_t i = 0; i < objArray.size(); i++)
     {
         valueCopy = value;
-        objArray[i].set(path, valueCopy);
+        objArray[i]->set(path, valueCopy);
     }
 }
 
@@ -62,7 +61,7 @@ void Array::create(std::string &path, std::string &value)
 {
     if (path.empty())
     {
-        Object obj(value);
+        Object *obj = new Object(value);
         objArray.push_back(obj);
         return;
     }
@@ -70,9 +69,9 @@ void Array::create(std::string &path, std::string &value)
     {
         for (size_t i = 0; i < objArray.size(); i++)
         {
-            if (objArray[i].hasKey(path))
+            if (objArray[i]->hasKey(path))
             {
-                objArray[i].create(path, value);
+                objArray[i]->create(path, value);
                 return;
             }
         }
@@ -81,7 +80,7 @@ void Array::create(std::string &path, std::string &value)
     {
         try
         {
-            objArray[i].create(path, value);
+            objArray[i]->create(path, value);
             path.clear();
             return;
         }
@@ -98,34 +97,27 @@ void Array::deleteJ(std::string &path)
     if (path.empty())
         Value::deleteJ(path);
 
-    if (path.find("/") < path.npos)
-    {
-        std::string buffer = path.substr(0, path.find("/"));
-        for (size_t i = 0; i < objArray.size(); i++)
-        {
-            if (objArray[i].hasKey(buffer))
-            {
-                objArray[i].deleteJ(path);
-                objArray[i].clearEmpty();
-                if (objArray[i].isEmpty())
-                    objArray.erase(objArray.begin() + i);
+    std::string buffer = getSubpath(path);
 
-                return;
-            }
-        }
-    }
-
-    std::string strCopy;
     for (size_t i = 0; i < objArray.size(); i++)
     {
-        strCopy = path;
-        if (objArray[i].hasKey(strCopy))
+        if (objArray[i]->hasKey(buffer) && path.empty())
         {
-            objArray[i].deleteJ(strCopy);
-            if (objArray[i].isEmpty())
-            {
+            objArray[i]->deleteJ(buffer);
+            objArray[i]->clearEmpty();
+            if (objArray[i]->isEmpty())
                 objArray.erase(objArray.begin() + i);
-            }
+
+            return;
+        }
+        else if (objArray[i]->hasKey(buffer))
+        {
+            objArray[i]->deleteJ(path);
+            objArray[i]->clearEmpty();
+            if (objArray[i]->isEmpty())
+                objArray.erase(objArray.begin() + i);
+
+            return;
         }
     }
 }
@@ -135,26 +127,16 @@ Value *Array::getValue(std::string &path)
     if (path.empty())
         return this;
 
-    std::string buffer;
-    if (path.find("/") < path.npos)
-    {
-        buffer = path.substr(0, path.find("/"));
-        path.erase(0, path.find("/") + 1);
-    }
-    else
-    {
-        buffer = path;
-        path.clear();
-    }
+    std::string buffer = getSubpath(path);
 
     for (size_t i = 0; i < objArray.size(); i++)
     {
-        if (objArray[i].hasKey(buffer) && path.empty())
+        if (objArray[i]->hasKey(buffer) && path.empty())
         {
-            return objArray[i].getValue(buffer);
+            return objArray[i]->getValue(buffer);
         }
-        else if (objArray[i].hasKey(buffer))
-            return objArray[i].getValue(path);
+        else if (objArray[i]->hasKey(buffer))
+            return objArray[i]->getValue(path);
     }
 
     return nullptr;
@@ -165,12 +147,28 @@ void Array::setValue(std::string &path, Value *ptr, std::string &key)
     if (path.empty())
     {
         KeyValuePair pair(ptr, key);
-        Object obj;
-        obj.push(&pair);
+        Object *obj = new Object();
+        obj->push(&pair);
         objArray.push_back(obj);
         return;
     }
 
+    std::string buffer = getSubpath(path);
+
+    for (size_t i = 0; i < objArray.size(); i++)
+    {
+        if (objArray[i]->hasKey(buffer))
+            objArray[i]->setValue(path, ptr, key);
+    }
+}
+
+Value *Array::createCopy() const
+{
+    return new Array(*this);
+}
+
+std::string Array::getSubpath(std::string &path) const
+{
     std::string buffer;
     if (path.find("/"))
     {
@@ -183,17 +181,7 @@ void Array::setValue(std::string &path, Value *ptr, std::string &key)
         path.clear();
     }
 
-    for (size_t i = 0; i < objArray.size(); i++)
-    {
-        if (objArray[i].hasKey(buffer))
-            objArray[i].setValue(path, ptr, key);
-    }
-}
-
-Value *Array::createCopy()
-{
-    // Array arr(*this);
-    return new Array(*this);
+    return buffer;
 }
 
 Array::Array(std::string &text)
@@ -208,7 +196,7 @@ Array::Array(std::string &text)
         if (buffer.empty())
             buffer = text;
         text.erase(0, buffer.length() + 1);
-        Object obj(buffer);
+        Object *obj = new Object(buffer);
         this->objArray.push_back(obj);
     }
     setType(JsonType::Array);

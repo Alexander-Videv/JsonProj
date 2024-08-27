@@ -15,7 +15,8 @@ void KeyValuePair::print(std::ostream &output) const
 void KeyValuePair::saveprint(std::ostream &output) const
 {
     output << "\"" << key << "\"" << ":";
-    if (value->getType() != JsonType::Object && value->getType() != JsonType::Array)
+
+    if (value->getType() != JsonType::Object && value->getType() != JsonType::Array && value->getType() != JsonType::Integer)
     {
         output << "\"";
         value->saveprint(output);
@@ -40,12 +41,12 @@ void KeyValuePair::setValue(Value *json)
     value = json;
 }
 
-std::string &KeyValuePair::getKey()
+std::string KeyValuePair::getKey() const
 {
-    return this->key;
+    return key;
 }
 
-Value *KeyValuePair::getJson()
+Value *KeyValuePair::getJson() const
 {
     return value;
 }

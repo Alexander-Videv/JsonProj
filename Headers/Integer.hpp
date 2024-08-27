@@ -12,13 +12,9 @@ public:
     void print(std::ostream &output) const override;
     void saveprint(std::ostream &output) const override { print(output); };
 
-    std::vector<Value *> search(std::string &sKey) const override
-    {
-        std::vector<Value *> null;
-        return null;
-    };
+    std::vector<Value *> search(std::string &sKey) const override { throw std::invalid_argument("Object you reached has no data to search, please check the path again!"); };
     bool contains(std::string &val) const override;
-    Value *createCopy() override;
+    Value *createCopy() const override;
 
     Integer(int value);
     ~Integer() = default;

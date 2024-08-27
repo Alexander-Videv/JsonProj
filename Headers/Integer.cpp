@@ -12,9 +12,8 @@ bool Integer::contains(std::string &val) const
     return value == num;
 }
 
-Value *Integer::createCopy()
+Value *Integer::createCopy() const
 {
-    // Integer m_int(*this);
     return new Integer(*this);
 }
 

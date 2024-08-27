@@ -6,13 +6,8 @@
 
 struct KeyValuePair
 {
-    KeyValuePair() = default;
-    KeyValuePair(Value *ptr, std::string &key);
 
-    bool isEmpty()
-    {
-        return value->isEmpty();
-    };
+    bool isEmpty() const { return value->isEmpty(); };
     void print(std::ostream &output) const;
     void saveprint(std::ostream &output) const;
 
@@ -20,11 +15,14 @@ struct KeyValuePair
     void setValue(Value &json);
     void setValue(Value *json);
 
-    std::string &getKey();
-    Value *getJson();
+    std::string getKey() const;
+    Value *getJson() const;
 
     std::string key;
     Value *value;
+
+    KeyValuePair() = default;
+    KeyValuePair(Value *ptr, std::string &key);
 };
 
 #endif

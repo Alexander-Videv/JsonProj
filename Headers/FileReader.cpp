@@ -81,9 +81,16 @@ void FileReader::set(std::string &path, std::string &value)
 
 void FileReader::create(std::string &path, std::string &value)
 {
+    if (!validFlag)
+    {
+        std::cerr << "Cant create path in invalid file, please check the file then try again" << "\n";
+        return;
+    }
+
     try
     {
         Json.create(path, value);
+        saveFlag = false;
     }
     catch (const std::exception &e)
     {
@@ -93,9 +100,16 @@ void FileReader::create(std::string &path, std::string &value)
 
 void FileReader::pathDelete(std::string &path)
 {
+    if (!validFlag)
+    {
+        std::cerr << "Cant create path in invalid file, please check the file then try again" << "\n";
+        return;
+    }
+
     try
     {
         Json.deleteJ(path);
+        saveFlag = false;
     }
     catch (const std::exception &e)
     {
@@ -105,16 +119,20 @@ void FileReader::pathDelete(std::string &path)
 
 void FileReader::move(std::string &from, std::string &to)
 {
+    if (!validFlag)
+    {
+        std::cerr << "Cant create path in invalid file, please check the file then try again" << "\n";
+        return;
+    }
+
     std::string fromCopy = from;
     Value *ptr = getValue(from);
     if (ptr == nullptr)
     {
-        std::cout << "ERROR";
+        std::cerr << "Value on the given path cant be found, please check the given path for errors";
         return;
     }
-    std::string empty;
 
-    // create(to, empty);
     std::string key;
     if (fromCopy.find_last_of("/") < fromCopy.npos)
         key = fromCopy.substr(fromCopy.find_last_of("/") + 1);
@@ -123,6 +141,8 @@ void FileReader::move(std::string &from, std::string &to)
 
     setValue(to, ptr, key);
     pathDelete(fromCopy);
+
+    saveFlag = false;
 
     return;
 }
@@ -199,6 +219,7 @@ void FileReader::readCommand()
 {
     while (true)
     {
+
         std::string input;
 
         std::getline(std::cin, input);
@@ -290,9 +311,8 @@ void FileReader::open(std::string &filename)
 
     this->filename = filename;
 
-    validFlag = true;
-
     parse();
+    validFlag = true;
 }
 
 void FileReader::save(std::string &path)
@@ -343,7 +363,6 @@ void FileReader::print(std::ostream &output) const
     if (!validFlag)
         throw std::logic_error("Cant print invalid file");
     Json.print(output);
-    output << "\n";
 }
 
 void FileReader::exit()
@@ -353,6 +372,19 @@ void FileReader::exit()
 
     file.close();
 }
+
+void FileReader::saveAs(std::string &filename) const
+{
+    std::string empty;
+    try
+    {
+        saveAs(empty, filename);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+};
 
 FileReader::~FileReader()
 {

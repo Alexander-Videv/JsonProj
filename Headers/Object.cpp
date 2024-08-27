@@ -51,6 +51,7 @@ void Object::saveprint(std::ostream &output) const
     }
     output << "\n}";
 }
+
 void Object::print(std::ostream &output) const
 {
     for (int i = jsonArray.size() - 1; i >= 0; i--)
@@ -116,7 +117,24 @@ Value *Object::readValue(std::string &text)
     return new String(buffer);
 }
 
-bool Object::hasKey(std::string &key)
+std::string Object::getSubpath(std::string &path)
+{
+    std::string buffer;
+    if (path.find("/") < path.npos)
+    {
+        buffer = path.substr(0, path.find("/"));
+        path.erase(0, path.find("/") + 1);
+    }
+    else
+    {
+        buffer = path;
+        path.clear();
+    }
+
+    return buffer;
+}
+
+bool Object::hasKey(std::string &key) const
 {
     for (size_t i = 0; i < jsonArray.size(); i++)
     {
@@ -127,9 +145,8 @@ bool Object::hasKey(std::string &key)
     return false;
 }
 
-Value *Object::createCopy()
+Value *Object::createCopy() const
 {
-    // Object obj(*this);
     return new Object(*this);
 }
 
@@ -154,26 +171,20 @@ std::vector<Value *> Object::search(std::string &sKey) const
 
 void Object::create(std::string &path, std::string &value)
 {
-    std::string buffer;
-    if (path.find("/") < path.npos)
-        buffer = path.substr(0, path.find("/"));
+    std::string buffer = getSubpath(path);
 
     for (size_t i = 0; i < jsonArray.size(); i++)
     {
-        if (path.empty())
-            break;
-        if (jsonArray[i].getKey() == buffer || jsonArray[i].getKey() == path)
+        if (jsonArray[i].getKey() == buffer)
         {
-            if (!buffer.empty())
+            if (path.empty())
             {
-                path.erase(0, buffer.size() + 1);
                 buffer.clear();
-                jsonArray[i].value->create(path, value);
+                jsonArray[i].value->create(buffer, value);
                 return;
             }
             else
             {
-                path.clear();
                 jsonArray[i].value->create(path, value);
                 return;
             }
@@ -189,7 +200,7 @@ void Object::create(std::string &path, std::string &value)
     KeyValuePair pair;
     if (key.empty())
     {
-        pair.setKey(path);
+        pair.setKey(buffer);
     }
     else
     {
@@ -201,24 +212,20 @@ void Object::create(std::string &path, std::string &value)
 
 void Object::deleteJ(std::string &path)
 {
-    std::string buffer;
-    if (path.find("/") < path.npos)
-        buffer = path.substr(0, path.find("/"));
+    std::string buffer = getSubpath(path);
 
     for (size_t i = 0; i < jsonArray.size(); i++)
     {
-        if (jsonArray[i].getKey() == path)
+        if (jsonArray[i].getKey() == buffer && path.empty())
         {
+            // delete &jsonArray[i];
             jsonArray.erase(jsonArray.begin() + i);
-            path.clear();
 
             break;
         }
 
         if (jsonArray[i].getKey() == buffer)
         {
-            path.erase(0, buffer.size() + 1);
-            buffer.clear();
             jsonArray[i].value->deleteJ(path);
             break;
         }
@@ -230,17 +237,7 @@ Value *Object::getValue(std::string &path)
     if (path.empty())
         return this;
 
-    std::string buffer;
-    if (path.find("/") < path.npos)
-    {
-        buffer = path.substr(0, path.find("/"));
-        path.erase(0, path.find("/") + 1);
-    }
-    else
-    {
-        buffer = path;
-        path.clear();
-    }
+    std::string buffer = getSubpath(path);
 
     for (size_t i = 0; i < jsonArray.size(); i++)
     {
@@ -260,17 +257,7 @@ void Object::setValue(std::string &path, Value *ptr, std::string &key)
         return;
     }
 
-    std::string buffer;
-    if (path.find("/") < path.npos)
-    {
-        buffer = path.substr(0, path.find("/"));
-        path.erase(0, path.find("/") + 1);
-    }
-    else
-    {
-        buffer = path;
-        path.clear();
-    }
+    std::string buffer = getSubpath(path);
 
     for (size_t i = 0; i < jsonArray.size(); i++)
     {
@@ -281,25 +268,22 @@ void Object::setValue(std::string &path, Value *ptr, std::string &key)
 
 void Object::set(std::string &path, std::string &value)
 {
-    std::string buffer;
-    if (path.find("/") < path.npos)
-        buffer = path.substr(path.find("/") + 1);
+    std::string buffer = getSubpath(path);
 
-    for (size_t i = 0; i < jsonArray.size(); i++)
-    {
-        if (jsonArray[i].getKey() == path)
+    if (path.empty())
+        for (size_t i = 0; i < jsonArray.size(); i++)
         {
-            jsonArray[i].setValue(*readValue(value));
-            return;
+            if (jsonArray[i].getKey() == buffer)
+            {
+                jsonArray[i].setValue(*readValue(value));
+                return;
+            }
         }
-    }
-
-    path.erase(path.find("/"));
 
     for (size_t i = 0; i < jsonArray.size(); i++)
     {
-        if (jsonArray[i].getKey() == path && (jsonArray[i].value->getType() == JsonType::Object || jsonArray[i].value->getType() == JsonType::Array))
-            jsonArray[i].value->set(buffer, value);
+        if (jsonArray[i].getKey() == buffer && (jsonArray[i].value->getType() == JsonType::Object || jsonArray[i].value->getType() == JsonType::Array))
+            jsonArray[i].value->set(path, value);
     }
 }
 

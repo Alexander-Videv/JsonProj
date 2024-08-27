@@ -16,8 +16,7 @@ bool String::contains(std::string &value) const
     return str.find(value) < str.npos;
 }
 
-Value *String::createCopy()
+Value *String::createCopy() const
 {
-    // String str(*this);
     return new String(*this);
 }

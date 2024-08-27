@@ -1,14 +1,19 @@
 {
     "object": {
-        "value": "123",
+        "value": 123,
         "name": "test"
     },
     "material": "roll",
     "members": [
         {
-            "id": "12",
             "name": "Sasho",
             "position": "OOP"
+        },
+        {
+            "Hrisi": {
+                "gotina": 10,
+                "krasiva": 100
+            }
         }
     ],
     "offices": [
@@ -26,9 +31,6 @@
         },
         {
             "name": "sasho"
-        },
-        {
-            "fuck": "you"
         }
     ]
 }
